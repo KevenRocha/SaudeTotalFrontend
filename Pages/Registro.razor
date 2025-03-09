@@ -1,0 +1,39 @@
+﻿@page "/registro"
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Registro</h3>
+
+<EditForm Model="@usuario" OnValidSubmit="HandleRegistro">
+    <InputText @bind-Value="usuario.Nome" placeholder="Nome" />
+    <InputText @bind-Value="usuario.Email" placeholder="Email" />
+    <InputText @bind-Value="usuario.Senha" placeholder="Senha" type="password" />
+    <InputDate @bind-Value="usuario.DataNascimento" placeholder="Data de Nascimento" />
+    <InputText @bind-Value="usuario.Genero" placeholder="Gênero" />
+    <InputText @bind-Value="usuario.Telefone" placeholder="Telefone" />
+    <button type="submit">Registrar</button>
+</EditForm>
+
+@code {
+    private Usuario usuario = new Usuario();
+
+    private async Task HandleRegistro()
+    {
+        var response = await Http.PostAsJsonAsync("api/Usuarios/registrar", usuario);
+        if (response.IsSuccessStatusCode)
+        {
+            // Redirecionar para a página de login
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+
+    public class Usuario
+    {
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Senha { get; set; }
+        public DateTime DataNascimento { get; set; }
+        public string Genero { get; set; }
+        public string Telefone { get; set; }
+    }
+}

@@ -1,0 +1,31 @@
+﻿@page "/login"
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Login</h3>
+
+<EditForm Model="@credenciais" OnValidSubmit="HandleLogin">
+    <InputText @bind-Value="credenciais.Email" placeholder="Email" />
+    <InputText @bind-Value="credenciais.Senha" placeholder="Senha" type="password" />
+    <button type="submit">Entrar</button>
+</EditForm>
+
+@code {
+    private Credenciais credenciais = new Credenciais();
+
+    private async Task HandleLogin()
+    {
+        var response = await Http.PostAsJsonAsync("api/Usuarios/login", credenciais);
+        if (response.IsSuccessStatusCode)
+        {
+            // Redirecionar para a página principal
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    public class Credenciais
+    {
+        public string Email { get; set; }
+        public string Senha { get; set; }
+    }
+}
